@@ -1,19 +1,17 @@
-API_TOKEN = 'PUT PERSONAL API TOKEN HERE';
-ORGANISATION_FLOW = 'FILL ORGANISATION/FLOW HERE';
-
-EVENT_URI = 'https://stream.flowdock.com/flows'
-            + '?filter=' + ORGANISATION_FLOW + '&token=' + API_TOKEN;
-
-REST_API_URL = 'https://api.flowdock.com/flows/' + ORGANISATION_FLOW;
-USERS_URI = REST_API_URL +'/users';
-POST_URI = REST_API_URL + '/messages';
-
 $(document).ready(function() {
-  var flow = new Flow();
+  var flow = new Flow(
+    'PUT ORGANISATION/FLOW HERE',
+    'PUT API_TOKEN_HERE');
   flow.init();
 });
 
-function Flow() {
+function Flow(flowId, apiToken) {
+  var REST_API_URL = 'https://api.flowdock.com/flows/' + flowId;
+  var USERS_URI = REST_API_URL +'/users';
+  var POST_URI = REST_API_URL + '/messages';
+  var EVENT_URI = 'https://stream.flowdock.com/flows'
+            + '?filter=' + flowId + '&token=' + apiToken;
+
   function init() {
     getUserList(function(users) {
       startFlow(users);
@@ -87,7 +85,7 @@ function Flow() {
   function sendAjax(opts) {
     var options = $.extend({}, opts);
     options.beforeSend = function(xhr){
-      xhr.setRequestHeader ("Authorization", "Basic " + btoa(API_TOKEN));
+      xhr.setRequestHeader ("Authorization", "Basic " + btoa(apiToken));
     };
     $.ajax(options);
   }
